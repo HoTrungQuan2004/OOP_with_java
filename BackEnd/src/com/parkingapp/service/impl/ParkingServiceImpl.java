@@ -8,7 +8,6 @@ import com.parkingapp.service.ParkingService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implementation đơn giản, dùng repository (có thể in-memory hoặc DB)
@@ -48,8 +47,10 @@ public class ParkingServiceImpl implements ParkingService {
     @Override
     public void assignSpotToResident(Long spotId, Resident resident) throws Exception {
         ParkingSpot spot = spotRepo.findById(spotId).orElseThrow(() -> new IllegalArgumentException("Spot not found"));
-        if (spot.getStatus() == SpotStatus.OUT_OF_SERVICE) throw new IllegalStateException("Spot out of service");
-        if (spot.getStatus() == SpotStatus.OCCUPIED) throw new IllegalStateException("Spot currently occupied");
+        if (spot.getStatus() == SpotStatus.OUT_OF_SERVICE)
+            throw new IllegalStateException("Spot out of service");
+        if (spot.getStatus() == SpotStatus.OCCUPIED)
+            throw new IllegalStateException("Spot currently occupied");
         spot.assignToResident(resident.getId());
         spotRepo.update(spot);
     }
