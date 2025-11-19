@@ -1,3 +1,6 @@
+
+// Chỉ để test nhanh, không phải production code
+
 package com.parkingapp;
 
 import com.parkingapp.enums.SpotType;
@@ -22,15 +25,12 @@ public class DemoMain {
 
         // Hiển thị tất cả chỗ
         System.out.println("=== Tất cả chỗ ===");
-        service.listAllSpots().forEach(s ->
-            System.out.println(s.getId() + " - " + s.getCode() + " - " + s.getType() + " - " + s.getStatus())
-        );
+        service.listAllSpots().forEach(
+                s -> System.out.println(s.getId() + " - " + s.getCode() + " - " + s.getType() + " - " + s.getStatus()));
 
         // Hiển thị chỗ rảnh
         System.out.println("\n=== Chỗ rảnh ===");
-        service.listFreeSpots().forEach(s ->
-            System.out.println(s.getId() + " - " + s.getCode())
-        );
+        service.listFreeSpots().forEach(s -> System.out.println(s.getId() + " - " + s.getCode()));
 
         // Gán chỗ cho cư dân
         Resident resident = new Resident(101L, "Nguyen Van A", "B1-12A", "0900000000");
@@ -47,9 +47,8 @@ public class DemoMain {
 
         // Hiển thị trạng thái sau thay đổi
         System.out.println("\n=== Trạng thái sau cập nhật ===");
-        service.listAllSpots().forEach(s ->
-            System.out.println(s.getCode() + " - " + s.getType() + " - " + s.getStatus() +
-                (s.getAssignedResidentId() != null ? " - assignedTo:" + s.getAssignedResidentId() : ""))
-        );
+        service.listAllSpots()
+                .forEach(s -> System.out.println(s.getCode() + " - " + s.getType() + " - " + s.getStatus() +
+                        (s.getAssignedResidentId() != null ? " - assignedTo:" + s.getAssignedResidentId() : "")));
     }
 }
