@@ -10,9 +10,25 @@ import com.parkingapp.repository.InMemoryParkingSpotRepository;
 import com.parkingapp.repository.ParkingSpotRepository;
 import com.parkingapp.service.ParkingService;
 import com.parkingapp.service.impl.ParkingServiceImpl;
+import java.sql.Connection;
 
 public class DemoMain {
     public static void main(String[] args) {
+
+    // Test kết nối JDBC
+
+    Connection connection = com.parkingapp.repository.jdbcParkingSpotRepository.getConnection();
+    System.out.println(connection);
+
+    com.parkingapp.repository.jdbcParkingSpotRepository.printInfo(connection);
+
+    com.parkingapp.repository.jdbcParkingSpotRepository.closeConnection(connection);
+    System.out.println(connection);
+
+    
+    // Test in-memory repo và service
+
+    /* 
         // Khởi tạo in-memory repo và service
         ParkingSpotRepository repo = new InMemoryParkingSpotRepository();
         ParkingService service = new ParkingServiceImpl(repo);
@@ -50,5 +66,7 @@ public class DemoMain {
         service.listAllSpots()
                 .forEach(s -> System.out.println(s.getCode() + " - " + s.getType() + " - " + s.getStatus() +
                         (s.getAssignedResidentId() != null ? " - assignedTo:" + s.getAssignedResidentId() : "")));
+    
+    */
     }
 }
