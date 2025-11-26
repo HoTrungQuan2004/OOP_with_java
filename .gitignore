@@ -1,7 +1,4 @@
 # .gitignore created by organizer script
-/backend/target/
-/backEnd_build_backup/
-/BackEnd_build_backup/
-/node_modules/
-/frontend/node_modules/
+/ParkingManagementApp/target
+
 

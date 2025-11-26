@@ -16,6 +16,9 @@ import org.springframework.context.annotation.Bean;
 public class ParkingApplication {
 
     public static void main(String[] args) {
+        Connection connection = com.parkingapp.repository.OracleJdbcHelper.getConnection();
+        System.out.println("Connected: " + connection);
+        
         SpringApplication.run(ParkingApplication.class, args);
     }
 
