@@ -1,0 +1,15 @@
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/ParkingApplication.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/repository/ResidentRepository.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/service/impl/ParkingServiceImpl.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/controller/ParkingSpotController.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/controller/HomeController.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/service/ParkingService.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/model/Resident.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/model/Vehicle.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/repository/InMemoryParkingSpotRepository.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/repository/InMemoryResidentRepository.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/model/ParkingLot.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/model/ParkingSpot.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/repository/ParkingSpotRepository.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/enums/SpotStatus.java
+/workspaces/Le-Gia-Bao/backendsrc/backend/src/main/java/com/parkingapp/enums/SpotType.java

@@ -1,0 +1,57 @@
+package com.parkingapp.model;
+
+import com.parkingapp.enums.SpotStatus;
+import com.parkingapp.enums.SpotType;
+
+/**
+ * Đại diện 1 chỗ đỗ
+ */
+public class ParkingSpot {
+    private final Long id;
+    private final String code; // ví dụ "B2-05" (block-floor-number)
+    private final SpotType type;
+    private SpotStatus status;
+    private Resident assignedResident; // nếu chỗ được gán cho cư dân
+
+    public ParkingSpot(Long id, String code, SpotType type) {
+        this.id = id;
+        this.code = code;
+        this.type = type;
+        this.status = SpotStatus.FREE;
+        this.assignedResident = null;
+    }
+
+    public boolean isFree() {
+        return status == SpotStatus.FREE;
+    }
+
+    public void assignToResident(Resident resident) {
+        this.assignedResident = resident;
+        this.status = SpotStatus.ASSIGNED;
+    }
+
+    public void unassign() {
+        this.assignedResident = null;
+        this.status = SpotStatus.FREE;
+    }
+
+    public void occupy() {
+        this.status = SpotStatus.OCCUPIED;
+    }
+
+    public void release() {
+        this.status = SpotStatus.FREE;
+    }
+
+    public void markOutOfService() {
+        this.status = SpotStatus.OUT_OF_SERVICE;
+        this.assignedResident = null;
+    }
+
+    // getters
+    public Long getId() { return id; }
+    public String getCode() { return code; }
+    public SpotType getType() { return type; }
+    public SpotStatus getStatus() { return status; }
+    public Resident getAssignedResident() { return assignedResident; }
+}
