@@ -40,36 +40,36 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="spot : ${spots}">
-                    <td class="fw-bold" th:text="${spot.code}">B1-01</td>
+                <tr th:each="entry : ${spots}">
+                    <td class="fw-bold" th:text="${entry.spot.code}">B1-01</td>
                     <td>
-                        <span th:if="${spot.type.name() == 'CAR'}">🚗 Car</span>
-                        <span th:if="${spot.type.name() == 'MOTORBIKE'}">🏍️ Bike</span>
+                        <span th:if="${entry.spot.type.name() == 'CAR'}">🚗 Car</span>
+                        <span th:if="${entry.spot.type.name() == 'MOTORBIKE'}">🏍️ Bike</span>
                     </td>
                     <td>
                         <span class="badge status-badge" 
-                              th:classappend="'status-' + ${spot.status}"
-                              th:text="${spot.status}">FREE</span>
+                              th:classappend="'status-' + ${entry.spot.status}"
+                              th:text="${entry.spot.status}">FREE</span>
                     </td>
                     <td>
-                        <a th:if="${spot.assignedResident != null}" 
-                           th:href="@{/parking/residents/{id}(id=${spot.assignedResident.id})}"
-                           th:text="${spot.assignedResident.name}">John Doe</a>
-                        <span th:if="${spot.assignedResident == null}">-</span>
+                        <a th:if="${entry.resident != null}" 
+                           th:href="@{/parking/residents/{id}(id=${entry.resident.id})}"
+                           th:text="${entry.resident.name}">John Doe</a>
+                        <span th:if="${entry.resident == null}">-</span>
                     </td>
                     <td>
                         <!-- Action Buttons -->
                         <div class="btn-group" role="group">
-                            <a th:if="${spot.status.name() == 'FREE'}" 
-                               th:href="@{/parking/spots/{id}/assign(id=${spot.id})}" 
+                            <a th:if="${entry.spot.status.name() == 'FREE'}" 
+                               th:href="@{/parking/spots/{id}/assign(id=${entry.spot.id})}" 
                                class="btn btn-sm btn-success">Assign</a>
                             
-                            <form th:if="${spot.status.name() == 'ASSIGNED'}" 
-                                  th:action="@{/parking/spots/{id}/unassign(id=${spot.id})}" method="post" style="display:inline;">
+                            <form th:if="${entry.spot.status.name() == 'ASSIGNED'}" 
+                                  th:action="@{/parking/spots/{id}/unassign(id=${entry.spot.id})}" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-sm btn-warning">Unassign</button>
                             </form>
                             
-                            <form th:action="@{/parking/spots/{id}/delete}" method="post" style="display:inline;" 
+                                <form th:action="@{/parking/spots/{id}/delete(id=${entry.spot.id})}" method="post" style="display:inline;" 
                                   onsubmit="return confirm('Delete this spot?');">
                                 <button type="submit" class="btn btn-sm btn-danger ms-1">Delete</button>
                             </form>

@@ -45,7 +45,10 @@ public class ParkingSpotController {
      */
     @GetMapping("/spots")
     public String listAllSpots(Model model) {
-        model.addAttribute("spots", parkingService.listAllSpots());
+        var views = parkingService.listAllSpots().stream()
+                .map(spot -> parkingService.getResidentById(spot.getAssignedResidentId()).map(res -> new com.parkingapp.dto.SpotView(spot, res)).orElseGet(() -> new com.parkingapp.dto.SpotView(spot, null)))
+                .toList();
+        model.addAttribute("spots", views);
         model.addAttribute("pageTitle", "All Parking Spots");
         return "parking-list";  // → templates/parking-list.html
     }
@@ -55,7 +58,10 @@ public class ParkingSpotController {
      */
     @GetMapping("/spots/free")
     public String listFreeSpots(Model model) {
-        model.addAttribute("spots", parkingService.listFreeSpots());
+        var views = parkingService.listFreeSpots().stream()
+                .map(spot -> parkingService.getResidentById(spot.getAssignedResidentId()).map(res -> new com.parkingapp.dto.SpotView(spot, res)).orElseGet(() -> new com.parkingapp.dto.SpotView(spot, null)))
+                .toList();
+        model.addAttribute("spots", views);
         model.addAttribute("pageTitle", "Available Spots");
         return "parking-list";
     }

@@ -87,6 +87,7 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public Optional<Resident> getResidentById(Long id) {
+        if (id == null) return Optional.empty();
         return residentRepo.findById(id);
     }
 

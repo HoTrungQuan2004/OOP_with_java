@@ -1,4 +1,4 @@
-# .gitignore created by organizer script
+/workspaces/OOP_with_java/.vscode
 /ParkingManagementApp/target
 
 

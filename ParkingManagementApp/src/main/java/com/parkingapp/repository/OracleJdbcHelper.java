@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class OracleJdbcHelper {
+    // optional shared connection that can be closed on application shutdown
+    private static volatile Connection sharedConnection = null;
+
     public static Connection getConnection() {
         Connection connection = null;
 
@@ -33,6 +36,22 @@ public class OracleJdbcHelper {
         return connection;
     }
 
+    /**
+     * Returns a shared connection instance. The connection is created lazily
+     * and retained so callers can inspect it; the application shutdown listener
+     * will close this shared connection.
+     */
+    public static synchronized Connection getSharedConnection() {
+        try {
+            if (sharedConnection == null || sharedConnection.isClosed()) {
+                sharedConnection = getConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sharedConnection;
+    }
+
     public static void closeConnection(Connection connection) {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -40,6 +59,37 @@ public class OracleJdbcHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Close the shared connection (if any) and clear the reference.
+     */
+    public static synchronized void closeSharedConnection() {
+        try {
+            closeConnection(sharedConnection);
+        } finally {
+            sharedConnection = null;
+        }
+    }
+
+    /**
+     * Deregister JDBC drivers loaded by this classloader to avoid memory leaks
+     * when context shuts down (useful in certain container environments).
+     */
+    public static void deregisterJdbcDrivers() {
+        try {
+            java.util.Enumeration<java.sql.Driver> drivers = DriverManager.getDrivers();
+            while (drivers.hasMoreElements()) {
+                java.sql.Driver driver = drivers.nextElement();
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    // ignore individual driver dereg failures
+                }
+            }
+        } catch (Exception e) {
+            // ignore
         }
     }
 

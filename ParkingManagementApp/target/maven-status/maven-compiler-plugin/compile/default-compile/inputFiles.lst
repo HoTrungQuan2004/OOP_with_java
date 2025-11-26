@@ -6,13 +6,16 @@
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/ParkingLot.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/InMemoryResidentRepository.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/service/impl/ParkingServiceImpl.java
-/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/DemoMain.java
+/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/config/DataSourceCloser.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/JdbcParkingSpotRepository.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/service/ParkingService.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/ParkingApplication.java
+/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/dto/SpotView.java
+/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/config/DebugExceptionHandler.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/ParkingSpotRepository.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/ParkingSpot.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/controller/HomeController.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/Vehicle.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/enums/SpotType.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/OracleJdbcHelper.java
+/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/config/DbShutdownListener.java
