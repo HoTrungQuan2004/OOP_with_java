@@ -5,14 +5,20 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class jdbcParkingSpotRepository {
+public class OracleJdbcHelper {
     public static Connection getConnection() {
         Connection connection = null;
 
         try {
-            DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
+            // Try to load Oracle driver if available. Use reflection to avoid
+            // compile-time dependency on Oracle JDBC classes.
+            try {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+            } catch (ClassNotFoundException e) {
+                // driver not on classpath; will attempt DriverManager.getConnection
+            }
 
-            String url = "";
+            String url = ""; // set your JDBC URL when using
             String username = "";
             String password = "";
 

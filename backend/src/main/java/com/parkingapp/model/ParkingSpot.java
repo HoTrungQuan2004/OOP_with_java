@@ -11,27 +11,27 @@ public class ParkingSpot {
     private final String code; // ví dụ "B2-05" (block-floor-number)
     private final SpotType type;
     private SpotStatus status;
-    private Resident assignedResident; // nếu chỗ được gán cho cư dân
+    private Long assignedResidentId; // nếu chỗ được gán cho cư dân
 
     public ParkingSpot(Long id, String code, SpotType type) {
         this.id = id;
         this.code = code;
         this.type = type;
         this.status = SpotStatus.FREE;
-        this.assignedResident = null;
+        this.assignedResidentId = null;
     }
 
     public boolean isFree() {
         return status == SpotStatus.FREE;
     }
 
-    public void assignToResident(Resident resident) {
-        this.assignedResident = resident;
+    public void assignToResident(Long residentId) {
+        this.assignedResidentId = residentId;
         this.status = SpotStatus.ASSIGNED;
     }
 
     public void unassign() {
-        this.assignedResident = null;
+        this.assignedResidentId = null;
         this.status = SpotStatus.FREE;
     }
 
@@ -45,7 +45,7 @@ public class ParkingSpot {
 
     public void markOutOfService() {
         this.status = SpotStatus.OUT_OF_SERVICE;
-        this.assignedResident = null;
+        this.assignedResidentId = null;
     }
 
     // getters
@@ -53,5 +53,5 @@ public class ParkingSpot {
     public String getCode() { return code; }
     public SpotType getType() { return type; }
     public SpotStatus getStatus() { return status; }
-    public Resident getAssignedResident() { return assignedResident; }
+    public Long getAssignedResidentId() { return assignedResidentId; }
 }

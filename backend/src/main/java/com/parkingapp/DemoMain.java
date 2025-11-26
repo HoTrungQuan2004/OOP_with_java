@@ -17,12 +17,12 @@ public class DemoMain {
 
     // Test kết nối JDBC
 
-    Connection connection = com.parkingapp.repository.jdbcParkingSpotRepository.getConnection();
+    Connection connection = com.parkingapp.repository.OracleJdbcHelper.getConnection();
     System.out.println(connection);
 
-    com.parkingapp.repository.jdbcParkingSpotRepository.printInfo(connection);
+    com.parkingapp.repository.OracleJdbcHelper.printInfo(connection);
 
-    com.parkingapp.repository.jdbcParkingSpotRepository.closeConnection(connection);
+    com.parkingapp.repository.OracleJdbcHelper.closeConnection(connection);
     System.out.println(connection);
 
     

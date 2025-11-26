@@ -12,18 +12,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service  // 🆕 ADD THIS - Tells Spring this is a service
+@Service
 public class ParkingServiceImpl implements ParkingService {
     private final ParkingSpotRepository spotRepo;
     private final ResidentRepository residentRepo;
 
-    @Autowired  // 🆕 ADD THIS - Spring will inject the repository
+    @Autowired
     public ParkingServiceImpl(ParkingSpotRepository spotRepo, ResidentRepository residentRepo) {
         this.spotRepo = spotRepo;
         this.residentRepo = residentRepo;
     }
 
-    // ✅ Rest of your existing code stays EXACTLY the same
     @Override
     public List<ParkingSpot> listAllSpots() {
         return spotRepo.findAll();
@@ -51,28 +50,21 @@ public class ParkingServiceImpl implements ParkingService {
 
     @Override
     public void assignSpotToResident(Long spotId, Resident resident) throws Exception {
-        ParkingSpot spot = spotRepo.findById(spotId)
-            .orElseThrow(() -> new IllegalArgumentException("Spot not found"));
+        ParkingSpot spot = spotRepo.findById(spotId).orElseThrow(() -> new IllegalArgumentException("Spot not found"));
         if (spot.getStatus() == SpotStatus.OUT_OF_SERVICE)
             throw new IllegalStateException("Spot out of service");
         if (spot.getStatus() == SpotStatus.OCCUPIED)
             throw new IllegalStateException("Spot currently occupied");
         
-        residentRepo.save(resident); // Save resident info
-        spot.assignToResident(resident);
+        // Ensure resident saved (repository may assign id externally)
+        residentRepo.save(resident);
+        spot.assignToResident(resident.getId());
         spotRepo.update(spot);
     }
 
     @Override
     public void unassignSpot(Long spotId) throws Exception {
-        ParkingSpot spot = spotRepo.findById(spotId)
-            .orElseThrow(() -> new IllegalArgumentException("Spot not found"));
-        
-        // Optional: Remove resident data when unassigning
-        if (spot.getAssignedResident() != null) {
-            residentRepo.deleteById(spot.getAssignedResident().getId());
-        }
-
+        ParkingSpot spot = spotRepo.findById(spotId).orElseThrow(() -> new IllegalArgumentException("Spot not found"));
         spot.unassign();
         spotRepo.update(spot);
     }
@@ -97,4 +89,5 @@ public class ParkingServiceImpl implements ParkingService {
     public Optional<Resident> getResidentById(Long id) {
         return residentRepo.findById(id);
     }
+
 }
