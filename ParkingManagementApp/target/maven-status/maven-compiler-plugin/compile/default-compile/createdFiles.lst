@@ -1,5 +1,4 @@
 com/parkingapp/dto/SpotView.class
-com/parkingapp/config/DbShutdownListener.class
 com/parkingapp/repository/InMemoryParkingSpotRepository$1.class
 com/parkingapp/ParkingApplication.class
 com/parkingapp/enums/SpotStatus.class

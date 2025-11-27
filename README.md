@@ -14,12 +14,6 @@ mvn -DskipTests clean package
 ```
 - The runnable jar will be created at `target/parking-management-1.0.0.jar`.
 
-**Run (development quick-run)**
-- Using Maven (dev with devtools reload — not recommended for shutdown testing):
-```bash
-cd /workspaces/OOP_with_java/ParkingManagementApp
-mvn -DskipTests spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=db"
-```
 
 **Run (recommended — packaged jar)**
 - Run the packaged application (preferred for reliable shutdown behavior):

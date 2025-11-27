@@ -18,4 +18,3 @@
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/Vehicle.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/enums/SpotType.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/OracleJdbcHelper.java
-/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/config/DbShutdownListener.java
