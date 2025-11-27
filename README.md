@@ -37,6 +37,12 @@ java -jar target/parking-management-1.0.0.jar --spring.profiles.active=default -
 
 **Database setup (Oracle example)**
 - Edit `src/main/resources/application-db.properties` and fill your `spring.datasource.url`, `username`, `password`.
+- We used SID in this below example, you need to change the URL depend on your type
+```bash
+spring.datasource.url=jdbc:oracle:thin:@<HOST>:<PORT>:<SID>
+spring.datasource.username=<YOUR_USERNAME>
+spring.datasource.password=<YOUR_PASSWORD>
+```
 
 
 **Verify clean shutdown & DB disconnect (Ctrl+C)**
