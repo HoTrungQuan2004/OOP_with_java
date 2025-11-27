@@ -10,6 +10,7 @@ com/parkingapp/repository/InMemoryParkingSpotRepository.class
 com/parkingapp/repository/ResidentRepository.class
 com/parkingapp/config/DataSourceCloser.class
 com/parkingapp/service/impl/ParkingServiceImpl.class
+com/parkingapp/config/SharedConnectionManager.class
 com/parkingapp/enums/SpotType.class
 com/parkingapp/repository/JdbcParkingSpotRepository$1.class
 com/parkingapp/model/ParkingSpot.class

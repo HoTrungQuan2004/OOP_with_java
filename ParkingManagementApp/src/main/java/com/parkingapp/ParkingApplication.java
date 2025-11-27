@@ -18,8 +18,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 public class ParkingApplication {
 
     public static void main(String[] args) {
-        java.sql.Connection connection = com.parkingapp.repository.OracleJdbcHelper.getSharedConnection();
-        System.out.println("DB shared connection present: " + (connection != null));
+        // Do not create a shared JDBC connection here. Shared connection
+        // will be initialized after Spring Boot creates the DataSource by
+        // the `SharedConnectionManager` component.
 
         // Register a JVM shutdown hook as a last-resort cleanup (covers SIGINT/Ctrl+C)
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

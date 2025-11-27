@@ -1,96 +1,85 @@
 package com.parkingapp.repository;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class OracleJdbcHelper {
-    // optional shared connection that can be closed on application shutdown
-    private static volatile Connection sharedConnection = null;
+    /**
+     * Lightweight helper that holds a shared Connection instance when the
+     * application needs to keep one for diagnostic or legacy reasons.
+     *
+     * The preferred way to obtain JDBC connections in this Spring Boot app is
+     * to use the Spring-managed DataSource (injected into beans). This helper
+     * only stores/returns a shared Connection created elsewhere (by a
+     * startup component) and provides utility methods to close it and
+     * deregister drivers on shutdown.
+     */
+    public class OracleJdbcHelper {
+        // optional shared connection that can be closed on application shutdown
+        private static volatile Connection sharedConnection = null;
 
-    public static Connection getConnection() {
-        Connection connection = null;
+        /**
+         * Return the shared Connection if initialized; may be null.
+         */
+        public static Connection getSharedConnection() {
+            return sharedConnection;
+        }
 
-        try {
-            // Try to load Oracle driver if available. Use reflection to avoid
-            // compile-time dependency on Oracle JDBC classes.
+        /**
+         * Set the shared Connection instance. Previous connection will be
+         * closed if present.
+         */
+        public static synchronized void setSharedConnection(Connection connection) {
             try {
-                Class.forName("oracle.jdbc.driver.OracleDriver");
-            } catch (ClassNotFoundException e) {
-                // driver not on classpath; will attempt DriverManager.getConnection
-            }
-
-            String url = ""; // set your JDBC URL when using
-            String username = "";
-            String password = "";
-
-            connection = DriverManager.getConnection(url, username, password);
-        } catch (NoClassDefFoundError e) {
-            System.err.println("Oracle JDBC driver class not found at runtime. Ensure ojdbc11.jar is on the classpath: "
-                    + e.getMessage());
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
-
-    /**
-     * Returns a shared connection instance. The connection is created lazily
-     * and retained so callers can inspect it; the application shutdown listener
-     * will close this shared connection.
-     */
-    public static synchronized Connection getSharedConnection() {
-        try {
-            if (sharedConnection == null || sharedConnection.isClosed()) {
-                sharedConnection = getConnection();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return sharedConnection;
-    }
-
-    public static void closeConnection(Connection connection) {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Close the shared connection (if any) and clear the reference.
-     */
-    public static synchronized void closeSharedConnection() {
-        try {
-            closeConnection(sharedConnection);
-        } finally {
-            sharedConnection = null;
-        }
-    }
-
-    /**
-     * Deregister JDBC drivers loaded by this classloader to avoid memory leaks
-     * when context shuts down (useful in certain container environments).
-     */
-    public static void deregisterJdbcDrivers() {
-        try {
-            java.util.Enumeration<java.sql.Driver> drivers = DriverManager.getDrivers();
-            while (drivers.hasMoreElements()) {
-                java.sql.Driver driver = drivers.nextElement();
-                try {
-                    DriverManager.deregisterDriver(driver);
-                } catch (SQLException e) {
-                    // ignore individual driver dereg failures
+                if (sharedConnection != null && !sharedConnection.isClosed()) {
+                    try {
+                        sharedConnection.close();
+                    } catch (Exception ignored) {
+                    }
                 }
+            } catch (SQLException ignored) {
             }
-        } catch (Exception e) {
-            // ignore
+            sharedConnection = connection;
         }
-    }
 
-}
+        public static void closeConnection(Connection connection) {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Close the shared connection (if any) and clear the reference.
+         */
+        public static synchronized void closeSharedConnection() {
+            try {
+                closeConnection(sharedConnection);
+            } finally {
+                sharedConnection = null;
+            }
+        }
+
+        /**
+         * Deregister JDBC drivers loaded by this classloader to avoid memory leaks
+         * when context shuts down (useful in certain container environments).
+         */
+        public static void deregisterJdbcDrivers() {
+            try {
+                java.util.Enumeration<java.sql.Driver> drivers = java.sql.DriverManager.getDrivers();
+                while (drivers.hasMoreElements()) {
+                    java.sql.Driver driver = drivers.nextElement();
+                    try {
+                        java.sql.DriverManager.deregisterDriver(driver);
+                    } catch (SQLException e) {
+                        // ignore individual driver dereg failures
+                    }
+                }
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+
+    }
