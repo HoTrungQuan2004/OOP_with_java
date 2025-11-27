@@ -93,16 +93,4 @@ public class OracleJdbcHelper {
         }
     }
 
-    // Đang test lấy thông tin DB
-    public static void printInfo(Connection connection) {
-        if (connection != null) {
-            try {
-                DatabaseMetaData metaData = connection.getMetaData();
-                System.out.println(metaData.getDatabaseProductName());
-                System.out.println(metaData.getDatabaseProductVersion());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
