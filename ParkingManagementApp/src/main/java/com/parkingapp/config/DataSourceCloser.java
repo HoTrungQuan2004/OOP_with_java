@@ -1,6 +1,5 @@
 package com.parkingapp.config;
 
-import com.parkingapp.repository.OracleJdbcHelper;
 import org.springframework.lang.Nullable;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
@@ -27,13 +26,16 @@ public class DataSourceCloser implements ApplicationListener<ContextClosedEvent>
                 }
             }
         } finally {
-            // also ensure our shared connection and drivers are cleaned up
             try {
-                OracleJdbcHelper.closeSharedConnection();
-            } catch (Exception ignored) {
-            }
-            try {
-                OracleJdbcHelper.deregisterJdbcDrivers();
+                java.util.Enumeration<java.sql.Driver> drivers = java.sql.DriverManager.getDrivers();
+                while (drivers.hasMoreElements()) {
+                    java.sql.Driver driver = drivers.nextElement();
+                    try {
+                        java.sql.DriverManager.deregisterDriver(driver);
+                        System.out.println("Deregistered JDBC driver: " + driver);
+                    } catch (java.sql.SQLException ignored) {
+                    }
+                }
             } catch (Exception ignored) {
             }
         }

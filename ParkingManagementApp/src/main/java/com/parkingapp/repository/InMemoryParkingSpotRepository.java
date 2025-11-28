@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Implementation in-memory đơn giản để dev UI/class làm song song với DB team
  */
 @Repository
-@ConditionalOnProperty(name = "app.use-inmemory", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "app.use-inmemory", havingValue = "true", matchIfMissing = false)
 public class InMemoryParkingSpotRepository implements ParkingSpotRepository {
     private final Map<Long, ParkingSpot> storage = new ConcurrentHashMap<>();
     private final AtomicLong idSequence = new AtomicLong(1);
