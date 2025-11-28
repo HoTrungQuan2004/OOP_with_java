@@ -4,6 +4,7 @@ import com.parkingapp.enums.SpotType;
 import com.parkingapp.model.ParkingSpot;
 import com.parkingapp.model.Resident;
 import com.parkingapp.service.ParkingService;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +48,7 @@ public class ParkingSpotController {
     public String listAllSpots(Model model) {
         var views = parkingService.listAllSpots().stream()
                 .map(spot -> parkingService.getResidentById(spot.getAssignedResidentId()).map(res -> new com.parkingapp.dto.SpotView(spot, res)).orElseGet(() -> new com.parkingapp.dto.SpotView(spot, null)))
-                .toList();
+                .collect(Collectors.toList());
         model.addAttribute("spots", views);
         model.addAttribute("pageTitle", "All Parking Spots");
         return "parking-list";  // → templates/parking-list.html
@@ -60,10 +61,39 @@ public class ParkingSpotController {
     public String listFreeSpots(Model model) {
         var views = parkingService.listFreeSpots().stream()
                 .map(spot -> parkingService.getResidentById(spot.getAssignedResidentId()).map(res -> new com.parkingapp.dto.SpotView(spot, res)).orElseGet(() -> new com.parkingapp.dto.SpotView(spot, null)))
-                .toList();
+                .collect(Collectors.toList());
         model.addAttribute("spots", views);
         model.addAttribute("pageTitle", "Available Spots");
         return "parking-list";
+    }
+
+    /**
+     * Search spots
+     */
+    @GetMapping("/spots/search")
+    public String searchSpots(@RequestParam String keyword, Model model) {
+        var views = parkingService.searchSpots(keyword).stream()
+                .map(spot -> parkingService.getResidentById(spot.getAssignedResidentId()).map(res -> new com.parkingapp.dto.SpotView(spot, res)).orElseGet(() -> new com.parkingapp.dto.SpotView(spot, null)))
+                .collect(Collectors.toList());
+        model.addAttribute("spots", views);
+        model.addAttribute("pageTitle", "Search Results for '" + keyword + "'");
+        model.addAttribute("keyword", keyword);
+        return "parking-list";
+    }
+
+    /**
+     * View spot history
+     */
+    @GetMapping("/spots/{id}/history")
+    public String viewSpotHistory(@PathVariable Long id, Model model) {
+        parkingService.getSpotById(id).ifPresentOrElse(
+            spot -> {
+                model.addAttribute("spot", spot);
+                model.addAttribute("historyList", parkingService.getSpotHistory(id));
+            },
+            () -> model.addAttribute("error", "Spot not found")
+        );
+        return "spot-history";
     }
 
     /**
@@ -99,11 +129,18 @@ public class ParkingSpotController {
      * URL: http://localhost:8080/parking/spots/{id}/assign
      */
     @GetMapping("/spots/{id}/assign")
-    public String showAssignForm(@PathVariable Long id, Model model) {
+    public String showAssignForm(@PathVariable Long id, 
+                                 @RequestParam(required = false) String keyword,
+                                 Model model) {
         parkingService.getSpotById(id).ifPresentOrElse(
             spot -> {
                 model.addAttribute("spot", spot);
-                model.addAttribute("resident", new Resident(null, "", "", ""));
+                if (keyword != null && !keyword.isEmpty()) {
+                    model.addAttribute("residents", parkingService.searchResidents(keyword));
+                    model.addAttribute("keyword", keyword);
+                } else {
+                    model.addAttribute("residents", parkingService.getAllResidents());
+                }
             },
             () -> model.addAttribute("error", "Spot not found")
         );
@@ -112,16 +149,14 @@ public class ParkingSpotController {
 
     @PostMapping("/spots/{id}/assign")
     public String assignSpot(@PathVariable Long id,
-                            @RequestParam String name,
-                            @RequestParam String apartment,
-                            @RequestParam String phone,
+                            @RequestParam Long residentId,
                             RedirectAttributes redirectAttributes) {
         try {
-            Long residentId = System.currentTimeMillis();
-            Resident resident = new Resident(residentId, name, apartment, phone);
+            Resident resident = parkingService.getResidentById(residentId)
+                .orElseThrow(() -> new IllegalArgumentException("Resident not found"));
             parkingService.assignSpotToResident(id, resident);
             redirectAttributes.addFlashAttribute("success", 
-                "Spot assigned to " + name + " successfully!");
+                "Spot assigned to " + resident.getName() + " successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -151,6 +186,28 @@ public class ParkingSpotController {
                                    RedirectAttributes redirectAttributes) {
         parkingService.markSpotOutOfService(id);
         redirectAttributes.addFlashAttribute("success", "Spot marked as out of service");
+        return "redirect:/parking/spots";
+    }
+
+    /**
+     * Mark spot as occupied
+     */
+    @PostMapping("/spots/{id}/occupy")
+    public String markOccupied(@PathVariable Long id,
+                               RedirectAttributes redirectAttributes) {
+        parkingService.markSpotOccupied(id);
+        redirectAttributes.addFlashAttribute("success", "Spot marked as occupied");
+        return "redirect:/parking/spots";
+    }
+
+    /**
+     * Mark spot as free (or assigned if resident exists)
+     */
+    @PostMapping("/spots/{id}/free")
+    public String markFree(@PathVariable Long id,
+                           RedirectAttributes redirectAttributes) {
+        parkingService.markSpotFree(id);
+        redirectAttributes.addFlashAttribute("success", "Spot marked as available");
         return "redirect:/parking/spots";
     }
 

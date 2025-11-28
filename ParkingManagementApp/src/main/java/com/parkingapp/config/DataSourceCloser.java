@@ -1,7 +1,7 @@
 package com.parkingapp.config;
 
 import com.parkingapp.repository.OracleJdbcHelper;
-import jakarta.annotation.Nullable;
+import org.springframework.lang.Nullable;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;

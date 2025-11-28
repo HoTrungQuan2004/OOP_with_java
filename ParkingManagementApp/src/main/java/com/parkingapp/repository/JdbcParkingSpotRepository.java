@@ -108,6 +108,14 @@ public class JdbcParkingSpotRepository implements ParkingSpotRepository {
     }
 
     @Override
+    public List<ParkingSpot> search(String keyword) {
+        String sql = "SELECT id, code, type, status, assigned_resident_id FROM parking_spot " +
+                     "WHERE LOWER(code) LIKE ? OR LOWER(status) LIKE ? OR LOWER(type) LIKE ? ORDER BY id";
+        String term = "%" + keyword.toLowerCase() + "%";
+        return jdbc.query(sql, this::mapRow, term, term, term);
+    }
+
+    @Override
     public ParkingSpot save(ParkingSpot spot) {
         // insert - assume id provided
         jdbc.update("INSERT INTO parking_spot (id, code, type, status, assigned_resident_id) VALUES (?, ?, ?, ?, ?)",

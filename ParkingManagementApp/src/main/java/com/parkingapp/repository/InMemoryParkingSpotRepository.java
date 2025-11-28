@@ -39,6 +39,16 @@ public class InMemoryParkingSpotRepository implements ParkingSpotRepository {
     }
 
     @Override
+    public List<ParkingSpot> search(String keyword) {
+        String term = keyword.toLowerCase();
+        return storage.values().stream()
+                .filter(s -> s.getCode().toLowerCase().contains(term) ||
+                             s.getStatus().name().toLowerCase().contains(term) ||
+                             s.getType().name().toLowerCase().contains(term))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ParkingSpot save(ParkingSpot spot) {
         long id = spot.getId();
         if (id == 0) {

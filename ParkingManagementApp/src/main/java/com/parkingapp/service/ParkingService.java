@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface ParkingService {
     List<ParkingSpot> listAllSpots();
     List<ParkingSpot> listFreeSpots();
+    List<ParkingSpot> searchSpots(String keyword);
+    List<com.parkingapp.model.SpotHistory> getSpotHistory(Long spotId);
     Optional<ParkingSpot> getSpotById(Long id);
 
     void addSpot(ParkingSpot spot);
@@ -23,6 +25,9 @@ public interface ParkingService {
 
     // change status
     void markSpotOutOfService(Long spotId);
+    void markSpotOccupied(Long spotId);
     void markSpotFree(Long spotId);
-        Optional<Resident> getResidentById(Long id);
+    Optional<Resident> getResidentById(Long id);
+    List<Resident> getAllResidents();
+    List<Resident> searchResidents(String keyword);
 }

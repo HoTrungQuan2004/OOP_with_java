@@ -16,6 +16,7 @@ public interface ParkingSpotRepository {
     List<ParkingSpot> findAll();
 
     List<ParkingSpot> findByTypeAndStatus(SpotType type, SpotStatus status);
+    List<ParkingSpot> search(String keyword);
 
     ParkingSpot save(ParkingSpot spot);
 

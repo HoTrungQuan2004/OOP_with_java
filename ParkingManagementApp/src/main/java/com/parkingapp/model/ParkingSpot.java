@@ -40,7 +40,11 @@ public class ParkingSpot {
     }
 
     public void release() {
-        this.status = SpotStatus.FREE;
+        if (this.assignedResidentId != null) {
+            this.status = SpotStatus.ASSIGNED;
+        } else {
+            this.status = SpotStatus.FREE;
+        }
     }
 
     public void markOutOfService() {

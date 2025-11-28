@@ -27,6 +27,17 @@
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
+    <!-- Search Bar -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form action="/parking/spots/search" method="get" class="d-flex">
+                <input type="text" name="keyword" class="form-control me-2" placeholder="Search by code, status, type..." th:value="${keyword}">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+                <a th:if="${keyword}" href="/parking/spots" class="btn btn-outline-secondary ms-2">Clear</a>
+            </form>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <table class="table table-hover">
@@ -68,11 +79,33 @@
                                   th:action="@{/parking/spots/{id}/unassign(id=${entry.spot.id})}" method="post" style="display:inline;">
                                 <button type="submit" class="btn btn-sm btn-warning">Unassign</button>
                             </form>
+
+                            <!-- Occupy (FREE or ASSIGNED) -->
+                            <form th:if="${entry.spot.status.name() == 'FREE' or entry.spot.status.name() == 'ASSIGNED'}"
+                                  th:action="@{/parking/spots/{id}/occupy(id=${entry.spot.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-secondary ms-1">Occupy</button>
+                            </form>
+
+                            <!-- Free (OCCUPIED or OUT_OF_SERVICE) -->
+                            <form th:if="${entry.spot.status.name() == 'OCCUPIED' or entry.spot.status.name() == 'OUT_OF_SERVICE'}"
+                                  th:action="@{/parking/spots/{id}/free(id=${entry.spot.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-success ms-1">Free</button>
+                            </form>
+
+                            <!-- Out of Service (Not OUT_OF_SERVICE) -->
+                            <form th:if="${entry.spot.status.name() != 'OUT_OF_SERVICE'}"
+                                  th:action="@{/parking/spots/{id}/out-of-service(id=${entry.spot.id})}" method="post" style="display:inline;"
+                                  onsubmit="return confirm('Mark as Out of Service? This will unassign any resident.');">
+                                <button type="submit" class="btn btn-sm btn-dark ms-1">Disable</button>
+                            </form>
                             
-                                <form th:action="@{/parking/spots/{id}/delete(id=${entry.spot.id})}" method="post" style="display:inline;" 
+                            <form th:action="@{/parking/spots/{id}/delete(id=${entry.spot.id})}" method="post" style="display:inline;" 
                                   onsubmit="return confirm('Delete this spot?');">
                                 <button type="submit" class="btn btn-sm btn-danger ms-1">Delete</button>
                             </form>
+                            
+                            <a th:href="@{/parking/spots/{id}/history(id=${entry.spot.id})}" 
+                               class="btn btn-sm btn-info ms-1">History</a>
                         </div>
                     </td>
                 </tr>

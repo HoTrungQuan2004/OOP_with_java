@@ -1,7 +1,7 @@
 package com.parkingapp.config;
 
 import com.parkingapp.repository.OracleJdbcHelper;
-import jakarta.annotation.PreDestroy;
+import javax.annotation.PreDestroy;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
