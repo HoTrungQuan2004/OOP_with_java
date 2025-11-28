@@ -1,4 +1,4 @@
-/workspaces/OOP_with_java/.vscode
-/workspaces/OOP_with_java/ParkingManagementApp/target
-
-
+/.vscode/
+/ParkingManagementApp/target/
+/**/target/
+*.jar
