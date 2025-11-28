@@ -25,14 +25,6 @@ public class ParkingApplication {
         // Register a JVM shutdown hook as a last-resort cleanup (covers SIGINT/Ctrl+C)
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("JVM shutdown hook: closing shared DB connection and deregistering drivers...");
-            try {
-                com.parkingapp.repository.OracleJdbcHelper.closeSharedConnection();
-            } catch (Exception ignored) {
-            }
-            try {
-                com.parkingapp.repository.OracleJdbcHelper.deregisterJdbcDrivers();
-            } catch (Exception ignored) {
-            }
         }));
 
         SpringApplication.run(ParkingApplication.class, args);
@@ -49,12 +41,12 @@ public class ParkingApplication {
     public CommandLineRunner seedData(InMemoryParkingSpotRepository repository) {
         return args -> {
             // Seed some parking spots for demo
-            repository.save(new ParkingSpot(1L, "B1-01", SpotType.CAR));
-            repository.save(new ParkingSpot(2L, "B1-02", SpotType.CAR));
-            repository.save(new ParkingSpot(3L, "B1-03", SpotType.MOTORBIKE));
-            repository.save(new ParkingSpot(4L, "B2-01", SpotType.CAR));
-            repository.save(new ParkingSpot(5L, "B2-02", SpotType.MOTORBIKE));
-            repository.save(new ParkingSpot(6L, "B2-03", SpotType.CAR));
+            repository.save(new ParkingSpot(1L, "P001", SpotType.CAR));
+            repository.save(new ParkingSpot(2L, "P002", SpotType.CAR));
+            repository.save(new ParkingSpot(3L, "P003", SpotType.MOTORBIKE));
+            repository.save(new ParkingSpot(4L, "P004", SpotType.CAR));
+            repository.save(new ParkingSpot(5L, "P005", SpotType.MOTORBIKE));
+            repository.save(new ParkingSpot(6L, "P006", SpotType.CAR));
             
             System.out.println("✅ Seeded " + repository.findAll().size() + " parking spots");
             System.out.println("🌐 Web application started");
