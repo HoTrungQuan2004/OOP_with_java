@@ -23,4 +23,3 @@ com/parkingapp/repository/JdbcParkingSpotRepository.class
 com/parkingapp/repository/InMemorySpotHistoryRepository.class
 com/parkingapp/repository/ParkingSpotRepository.class
 com/parkingapp/controller/ParkingSpotController.class
-com/parkingapp/model/Vehicle.class

@@ -20,5 +20,4 @@
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/ParkingSpot.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/repository/SpotHistoryRepository.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/controller/HomeController.java
-/workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/model/Vehicle.java
 /workspaces/OOP_with_java/ParkingManagementApp/src/main/java/com/parkingapp/enums/SpotType.java
