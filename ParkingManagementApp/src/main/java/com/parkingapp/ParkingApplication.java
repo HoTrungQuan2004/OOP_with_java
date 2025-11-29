@@ -38,8 +38,8 @@ public class ParkingApplication {
             repository.save(new ParkingSpot(5L, "P005", SpotType.MOTORBIKE));
             repository.save(new ParkingSpot(6L, "P006", SpotType.CAR));
             
-            System.out.println("✅ Seeded " + repository.findAll().size() + " parking spots");
-            System.out.println("🌐 Web application started");
+            System.out.println("Seeded " + repository.findAll().size() + " parking spots");
+            System.out.println("Web application started");
         };
     }
 }
