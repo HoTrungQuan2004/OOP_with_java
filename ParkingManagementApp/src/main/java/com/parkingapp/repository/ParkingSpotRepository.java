@@ -7,9 +7,6 @@ import com.parkingapp.model.ParkingSpot;
 import java.util.List;
 import java.util.Optional;
 
-/*
-  Giao diện truy xuất chỗ đỗ (có thể implement bằng DB; ban đầu dùng InMemory )
- */
 public interface ParkingSpotRepository {
     Optional<ParkingSpot> findById(Long id);
 

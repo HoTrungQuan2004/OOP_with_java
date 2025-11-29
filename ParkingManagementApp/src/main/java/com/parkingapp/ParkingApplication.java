@@ -10,19 +10,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-/**
- * Main Spring Boot application for Parking Management System
- * This replaces DemoMain.java for web application startup
- */
 @SpringBootApplication(scanBasePackages = "com.parkingapp")
 public class ParkingApplication {
 
     public static void main(String[] args) {
-        // Do not create a shared JDBC connection here. Shared connection
-        // will be initialized after Spring Boot creates the DataSource by
-        // the `SharedConnectionManager` component.
 
-        // Register a JVM shutdown hook as a last-resort cleanup (covers SIGINT/Ctrl+C)
+        // Register a JVM shutdown hook as a last-resort cleanup (Ctrl+C)
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("JVM shutdown hook: closing shared DB connection and deregistering drivers...");
         }));
@@ -30,13 +23,10 @@ public class ParkingApplication {
         SpringApplication.run(ParkingApplication.class, args);
     }
 
-    /**
-     * Seed initial parking spot data when application starts
-     * (Since we're using in-memory repository, no database needed)
-     */
+    // seed data for quick test (no db, only in-memory repo)
     @Bean
-    // Run seeding only when using the in-memory repository.
-    // Set to 'true' so the bean activates when app.use-inmemory=true.
+    // only run when using in-memory repo
+    // Set to 'true' in application.properties so the bean activates when app.use-inmemory=true.
     @ConditionalOnProperty(name = "app.use-inmemory", havingValue = "true", matchIfMissing = false)
     public CommandLineRunner seedData(InMemoryParkingSpotRepository repository) {
         return args -> {

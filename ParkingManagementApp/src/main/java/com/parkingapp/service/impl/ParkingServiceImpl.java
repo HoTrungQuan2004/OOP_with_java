@@ -10,6 +10,7 @@ import com.parkingapp.repository.SpotHistoryRepository;
 import com.parkingapp.service.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,36 +54,36 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    @Transactional
     public void addSpot(ParkingSpot spot) {
-        spotRepo.save(spot);
-        recordHistory(spot.getId(), "CREATED");
+        ParkingSpot saved = spotRepo.save(spot);
+        recordHistory(saved.getId(), "CREATED");
     }
 
     @Override
     public void removeSpot(Long spotId) {
         spotRepo.deleteById(spotId);
-        // History might be kept or deleted depending on requirements. 
-        // For now, we just delete the spot. History remains in DB if FK allows or cascades.
-        // But since we deleted the spot, we can't record history for it easily unless we do it before delete.
     }
 
     @Override
-    public void assignSpotToResident(Long spotId, Resident resident) throws Exception {
+    @Transactional
+    public void assignSpotToResident(Long spotId, Resident resident) {
         ParkingSpot spot = spotRepo.findById(spotId).orElseThrow(() -> new IllegalArgumentException("Spot not found"));
         if (spot.getStatus() == SpotStatus.OUT_OF_SERVICE)
             throw new IllegalStateException("Spot out of service");
         if (spot.getStatus() == SpotStatus.OCCUPIED)
             throw new IllegalStateException("Spot currently occupied");
-        
+
         // Ensure resident saved (repository may assign id externally)
-        residentRepo.save(resident);
-        spot.assignToResident(resident.getId());
+        Resident savedResident = residentRepo.save(resident);
+        spot.assignToResident(savedResident.getId());
         spotRepo.update(spot);
-        recordHistory(spotId, "ASSIGNED to " + resident.getName());
+        recordHistory(spotId, "ASSIGNED to " + savedResident.getName());
     }
 
     @Override
-    public void unassignSpot(Long spotId) throws Exception {
+    @Transactional
+    public void unassignSpot(Long spotId) {
         ParkingSpot spot = spotRepo.findById(spotId).orElseThrow(() -> new IllegalArgumentException("Spot not found"));
         spot.unassign();
         spotRepo.update(spot);
@@ -90,6 +91,7 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    @Transactional
     public void markSpotOutOfService(Long spotId) {
         spotRepo.findById(spotId).ifPresent(s -> {
             s.markOutOfService();
@@ -99,6 +101,7 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    @Transactional
     public void markSpotOccupied(Long spotId) {
         spotRepo.findById(spotId).ifPresent(s -> {
             s.occupy();
@@ -108,6 +111,7 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    @Transactional
     public void markSpotFree(Long spotId) {
         spotRepo.findById(spotId).ifPresent(s -> {
             s.release();

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Một bãi đỗ (có thể là toàn chung cư)
- */
 public class ParkingLot {
     private final Long id;
     private final String name;
@@ -33,7 +30,6 @@ public class ParkingLot {
         return spots.stream().filter(ParkingSpot::isFree).count();
     }
 
-    // getters
     public Long getId() { return id; }
     public String getName() { return name; }
 }

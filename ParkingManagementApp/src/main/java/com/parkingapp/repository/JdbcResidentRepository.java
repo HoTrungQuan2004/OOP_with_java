@@ -44,7 +44,7 @@ public class JdbcResidentRepository implements ResidentRepository {
     }
 
     @Override
-    public void save(Resident resident) {
+    public Resident save(Resident resident) {
         if (resident.getId() == null) {
             // Insert
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -57,10 +57,12 @@ public class JdbcResidentRepository implements ResidentRepository {
                 ps.setString(3, resident.getPhone());
                 return ps;
             }, keyHolder);
+            // If DB returned generated key, set it back on the model
+            if (keyHolder.getKey() != null) {
+                resident.setId(keyHolder.getKey().longValue());
+            }
         } else {
-            // Update or Insert with ID (if ID is provided but not in DB, this might fail if we assume update, 
-            // but usually save with ID means update. If we want upsert, it's more complex. 
-            // For now, let's assume if ID exists, it's an update, or we try update and if 0 rows, insert.)
+            // Update
             int rows = jdbc.update("UPDATE resident SET name=?, apartment=?, phone=? WHERE id=?",
                 resident.getName(), resident.getApartment(), resident.getPhone(), resident.getId());
             if (rows == 0) {
@@ -68,6 +70,7 @@ public class JdbcResidentRepository implements ResidentRepository {
                      resident.getId(), resident.getName(), resident.getApartment(), resident.getPhone());
             }
         }
+        return resident;
     }
 
     @Override

@@ -1,13 +1,17 @@
 package com.parkingapp.model;
 
-/**
- * Thông tin cư dân trong chung cư (người được gán chỗ)
- */
 public class Resident {
-    private final Long id;
+    private Long id;
     private final String name;
-    private final String apartment; // ví dụ "B2-12A"
+    private final String apartment;
     private String phone;
+
+    public Resident() {
+        this.id = null;
+        this.name = null;
+        this.apartment = null;
+        this.phone = null;
+    }
 
     public Resident(Long id, String name, String apartment, String phone) {
         this.id = id;
@@ -16,8 +20,13 @@ public class Resident {
         this.phone = phone;
     }
 
-    // getters / setters
+    public Resident(String name, String apartment, String phone) {
+        this(null, name, apartment, phone);
+    }
+
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
     public String getName() { return name; }
     public String getApartment() { return apartment; }
     public String getPhone() { return phone; }

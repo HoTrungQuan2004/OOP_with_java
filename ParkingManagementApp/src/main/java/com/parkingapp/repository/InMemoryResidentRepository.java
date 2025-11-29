@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Repository
 public class InMemoryResidentRepository implements ResidentRepository {
     private final Map<Long, Resident> storage = new ConcurrentHashMap<>();
+    private final java.util.concurrent.atomic.AtomicLong idSequence = new java.util.concurrent.atomic.AtomicLong(System.currentTimeMillis());
 
     @Override
     public Optional<Resident> findById(Long id) {
@@ -20,8 +21,12 @@ public class InMemoryResidentRepository implements ResidentRepository {
     }
 
     @Override
-    public void save(Resident resident) {
+    public Resident save(Resident resident) {
+        if (resident.getId() == null) {
+            resident.setId(idSequence.incrementAndGet());
+        }
         storage.put(resident.getId(), resident);
+        return resident;
     }
 
     @Override

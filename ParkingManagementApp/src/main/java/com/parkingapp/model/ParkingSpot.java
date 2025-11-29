@@ -3,15 +3,12 @@ package com.parkingapp.model;
 import com.parkingapp.enums.SpotStatus;
 import com.parkingapp.enums.SpotType;
 
-/**
- * Đại diện 1 chỗ đỗ
- */
 public class ParkingSpot {
     private final Long id;
-    private final String code; // ví dụ "B2-05" (block-floor-number)
+    private final String code; 
     private final SpotType type;
     private SpotStatus status;
-    private Long assignedResidentId; // nếu chỗ được gán cho cư dân
+    private Long assignedResidentId; 
 
     public ParkingSpot(Long id, String code, SpotType type) {
         this.id = id;
@@ -52,7 +49,6 @@ public class ParkingSpot {
         this.assignedResidentId = null;
     }
 
-    // getters
     public Long getId() { return id; }
     public String getCode() { return code; }
     public SpotType getType() { return type; }

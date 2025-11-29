@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface ResidentRepository {
     Optional<Resident> findById(Long id);
-    void save(Resident resident);
+    Resident save(Resident resident);
     void deleteById(Long id);
     List<Resident> findAll();
     List<Resident> search(String keyword);

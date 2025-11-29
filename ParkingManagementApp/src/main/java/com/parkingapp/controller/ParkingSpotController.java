@@ -22,10 +22,8 @@ public class ParkingSpotController {
     @Autowired
     private ParkingService parkingService;
 
-    /**
-     * GUI Screenshot 1: Dashboard - Overview of all parking spots
-     * URL: http://localhost:8080/parking/dashboard
-     */
+
+    // URL: http://localhost:8080/parking/dashboard
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         long totalSpots = parkingService.listAllSpots().size();
@@ -40,10 +38,8 @@ public class ParkingSpotController {
         return "dashboard";  // → templates/dashboard.html
     }
 
-    /**
-     * GUI Screenshot 2: List all parking spots
-     * URL: http://localhost:8080/parking/spots
-     */
+    // List all parking spots
+    // URL: http://localhost:8080/parking/spots
     @GetMapping("/spots")
     public String listAllSpots(Model model) {
         var views = parkingService.listAllSpots().stream()
@@ -54,9 +50,8 @@ public class ParkingSpotController {
         return "parking-list";  // → templates/parking-list.html
     }
 
-    /**
-     * GUI Screenshot 2b: Show only free spots
-     */
+    // Show only free spots
+    // URL: http://localhost:8080/parking/spots/free
     @GetMapping("/spots/free")
     public String listFreeSpots(Model model) {
         var views = parkingService.listFreeSpots().stream()
@@ -67,9 +62,7 @@ public class ParkingSpotController {
         return "parking-list";
     }
 
-    /**
-     * Search spots
-     */
+    // Search spots    
     @GetMapping("/spots/search")
     public String searchSpots(@RequestParam String keyword, Model model) {
         var views = parkingService.searchSpots(keyword).stream()
@@ -81,9 +74,7 @@ public class ParkingSpotController {
         return "parking-list";
     }
 
-    /**
-     * View spot history
-     */
+    // View spot history
     @GetMapping("/spots/{id}/history")
     public String viewSpotHistory(@PathVariable Long id, Model model) {
         parkingService.getSpotById(id).ifPresentOrElse(
@@ -96,10 +87,8 @@ public class ParkingSpotController {
         return "spot-history";
     }
 
-    /**
-     * GUI Screenshot 3: Form to add new parking spot
-     * URL: http://localhost:8080/parking/spots/new
-     */
+    // add new parking spot
+    // URL: http://localhost:8080/parking/spots/new
     @GetMapping("/spots/new")
     public String showAddSpotForm(Model model) {
         model.addAttribute("spot", new ParkingSpot(null, "", SpotType.CAR));
@@ -124,10 +113,8 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * GUI Screenshot 4: Assign parking spot to resident
-     * URL: http://localhost:8080/parking/spots/{id}/assign
-     */
+    // Assign parking spot to resident
+    // URL: http://localhost:8080/parking/spots/{id}/assign
     @GetMapping("/spots/{id}/assign")
     public String showAssignForm(@PathVariable Long id, 
                                  @RequestParam(required = false) String keyword,
@@ -163,9 +150,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * Unassign a parking spot
-     */
+    // Unassign a parking spot
     @PostMapping("/spots/{id}/unassign")
     public String unassignSpot(@PathVariable Long id, 
                               RedirectAttributes redirectAttributes) {
@@ -178,9 +163,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * Mark spot as out of service
-     */
+    // Mark spot as out of service
     @PostMapping("/spots/{id}/out-of-service")
     public String markOutOfService(@PathVariable Long id,
                                    RedirectAttributes redirectAttributes) {
@@ -189,9 +172,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * Mark spot as occupied
-     */
+    // Mark spot as occupied
     @PostMapping("/spots/{id}/occupy")
     public String markOccupied(@PathVariable Long id,
                                RedirectAttributes redirectAttributes) {
@@ -200,9 +181,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * Mark spot as free (or assigned if resident exists)
-     */
+    // Mark spot as free (or assigned if resident exists)
     @PostMapping("/spots/{id}/free")
     public String markFree(@PathVariable Long id,
                            RedirectAttributes redirectAttributes) {
@@ -211,9 +190,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * Delete parking spot
-     */
+    // Delete parking spot
     @PostMapping("/spots/{id}/delete")
     public String deleteSpot(@PathVariable Long id,
                             RedirectAttributes redirectAttributes) {
@@ -222,9 +199,7 @@ public class ParkingSpotController {
         return "redirect:/parking/spots";
     }
 
-    /**
-     * View resident details
-     */
+    // View resident details
     @GetMapping("/residents/{id}")
     public String viewResident(@PathVariable Long id, Model model) {
         parkingService.getResidentById(id).ifPresentOrElse(
