@@ -1,18 +1,44 @@
-**Project Overview**
-- Nội dung (Ai rảnh thì viết nha :> )
+**Parking Management Application**
 
-**Prerequisites**
-- Java 17+ (JDK installed)
+This repository contains a small Spring Boot web application for managing parking spots of a apartment. It supports two repository modes:
+
+- In-memory repositories (intended for development and quick demos)
+- JDBC-backed repositories (for production with an external database; Oracle used in examples)
+
+The README below explains how to prepare the environment, install the Oracle JDBC driver (if needed), build, run and configure the app.
+
+----
+
+## Prerequisites
+
+- Java 17+ (JDK installed and `JAVA_HOME` configured)
 - Maven 3.6+
-- Optional: Oracle DB if you want to run with `db` profile
+- Optional: Oracle Database if you want to run with the `db` profile
 
-**Installing Oracle JDBC driver (ojdbc11) for Maven builds**
+## Quick setup
 
-The Oracle JDBC driver is not available on Maven Central by default. If you already have
-the `ojdbc11.jar` file in `lib/` (path: `/workspaces/OOP_with_java/ParkingManagementApp/lib/ojdbc11.jar`),
-install it into your local Maven repository and then add it as a dependency in the `pom.xml`.
+1. Open a terminal and change to the project module:
 
-- Install the jar into your local Maven repo (run this from the project root):
+```bash
+cd /workspaces/OOP_with_java/ParkingManagementApp
+```
+
+2. Build the project (skip tests for faster builds during development):
+
+```bash
+mvn -DskipTests clean package
+```
+
+The runnable jar is created at `target/parking-management-1.0.0.jar`.
+
+## Oracle JDBC driver (ojdbc11)
+
+Oracle's JDBC driver is not available on Maven Central. If you have `ojdbc11.jar` locally (this project expects it at `ParkingManagementApp/lib/ojdbc11.jar` or you can download another version from [Oracle](https://www.oracle.com/database/technologies/appdev/jdbc.html) ), install it into your local Maven repository and add a dependency to the project's `pom.xml`.
+
+And this is how to install it into your maven:
+
+From the repository root run:
+
 ```bash
 mvn install:install-file \
 	-Dfile=ParkingManagementApp/lib/ojdbc11.jar \
@@ -22,7 +48,8 @@ mvn install:install-file \
 	-Dpackaging=jar
 ```
 
-- Add this dependency to `ParkingManagementApp/pom.xml` (or the module's `pom.xml`):
+Then add this dependency to `ParkingManagementApp/pom.xml`:
+
 ```xml
 <dependency>
 	<groupId>com.oracle.database.jdbc</groupId>
@@ -31,52 +58,81 @@ mvn install:install-file \
 </dependency>
 ```
 
-- Notes and alternatives:
-	- Do **not** commit the `ojdbc11.jar` binary into source control. Keep it in `lib/` locally
-		and install it into your local Maven repository as shown above.
-	- If you have access to an internal Maven repository (Nexus/Artifactory) that hosts Oracle
-		drivers, consider deploying the jar there and referencing that repository from your `pom.xml`.
-	- Oracle JDBC is distributed under Oracle's license — check redistribution rules before
-		publishing any artifacts that include the driver.
+Notes:
 
-**Build**
-- From the repository root (or inside `ParkingManagementApp`):
-```bash
-cd /workspaces/OOP_with_java/ParkingManagementApp
-mvn -DskipTests clean package
-```
-- The runnable jar will be created at `target/parking-management-1.0.0.jar`.
+- Do **not** commit `ojdbc11.jar` into version control. Keep a copy in `lib/` locally and install it to your local Maven repository as shown above.
+- If your organization has an internal Maven repository (Nexus/Artifactory) that hosts Oracle drivers, prefer deploying the driver there and referencing that repository in the `pom.xml`.
+- Check Oracle's license terms for redistribution before publishing artifacts that include their driver.
 
+----
 
-**Run (recommended — packaged jar)**
-- Run the packaged application (preferred for reliable shutdown behavior):
-```bash
-cd /workspaces/OOP_with_java/ParkingManagementApp/target
-java -jar parking-management-1.0.0.jar --spring.profiles.active=db
-```
+## Configuration
 
-**Profiles**
-- `db` — use real JDBC DataSource (configured in `src/main/resources/application-db.properties`).
-- In-memory mode (dev) — set `app.use-inmemory=true` (default for the in-memory repository). If you want in-memory mode run with:
-```bash
-java -jar target/parking-management-1.0.0.jar --spring.profiles.active=default --app.use-inmemory=true
+- Database configuration is located in `src/main/resources/application-db.properties`. Edit the following properties for an Oracle DB:
+
+```properties
+spring.datasource.url=jdbc:oracle:thin:@<HOST>:<PORT>:<SID-or-SERVICE>
+spring.datasource.username=YOUR_DB_USER
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+# Hikari tuning recommended for production
+spring.datasource.hikari.maximum-pool-size=5
+spring.datasource.hikari.connection-timeout=30000
+spring.datasource.hikari.connection-test-query=SELECT 1 FROM DUAL
 ```
 
-**Database setup (Oracle example)**
-- Edit `src/main/resources/application-db.properties` and fill your `spring.datasource.url`, `username`, `password`.
-- We used SID in this below example, you need to change the URL depend on your type
+- The application supports selecting between in-memory and DB-backed repositories using these options:
+
+	- Run with the `db` profile to enable JDBC-backed repositories (requires a configured DataSource):
+
+	```bash
+	java -jar target/parking-management-1.0.0.jar --spring.profiles.active=db
+	```
+
+	- Run in in-memory mode for development (no DB required):
+
+	```bash
+	java -jar target/parking-management-1.0.0.jar --app.use-inmemory=true
+	```
+
+----
+
+## Run the application
+
+From the module directory:
+
 ```bash
-spring.datasource.url=jdbc:oracle:thin:@<HOST>:<PORT>:<SID>
-spring.datasource.username=<YOUR_USERNAME>
-spring.datasource.password=<YOUR_PASSWORD>
+cd cd ./ParkingManagementApp/target/
+java -jar target/parking-management-1.0.0.jar --spring.profiles.active=db
 ```
 
+When the application starts you can open a browser to:
 
-**Verify clean shutdown & DB disconnect (Ctrl+C)**
-- Recommended: run the jar and redirect logs to a file so you can inspect shutdown messages:
-```bash
-cd /workspaces/OOP_with_java/ParkingManagementApp/target
-java -jar parking-management-1.0.0.jar --spring.profiles.active=db > ../app.log 2>&1
-# Press Ctrl+C in that terminal to stop the app
-```
+- Dashboard: `http://localhost:8080/parking/dashboard`
+- Manage spots: `http://localhost:8080/parking/spots`
 
+Use the UI to add spots and residents or assign/unassign spots.
+
+## Clean shutdown
+
+To stop the application cleanly and ensure the DataSource and JDBC drivers are deregistered, press `Ctrl+C` in the terminal where the app is running. The app logs will include shutdown messages that confirm Hikari and the DataSource closed.
+
+----
+
+## Important operational notes and troubleshooting
+
+- Sessions / Pool sizing (Oracle): if you see `ORA-02391 sessions-per-user exceeded` or connection failures when starting multiple instances, reduce the Hikari pool size and/or increase DB user session limits.
+
+- Connection testing: the property `spring.datasource.hikari.connection-test-query=SELECT 1 FROM DUAL` helps validate connections for Oracle.
+
+----
+
+## Developer notes
+
+- Repositories:
+	- In-memory implementations are intended for development and quick demos; they use thread-safe maps but do not enforce DB-level constraints.
+	- JDBC implementations use `JdbcTemplate` and depend on the configured DataSource.
+
+- Service layer:
+	- Multi-repository operations are annotated with `@Transactional` to ensure atomicity with JDBC-based repositories.
+	- `ResidentRepository.save(...)` and `ParkingSpotRepository.save(...)` return the saved entity with generated id populated.
