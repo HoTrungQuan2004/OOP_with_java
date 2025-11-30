@@ -102,8 +102,8 @@ spring.datasource.hikari.connection-test-query=SELECT 1 FROM DUAL
 From the module directory:
 
 ```bash
-cd cd ./ParkingManagementApp/target/
-java -jar target/parking-management-1.0.0.jar --spring.profiles.active=db
+cd ./ParkingManagementApp/target/
+java -jar parking-management-1.0.0.jar --spring.profiles.active=db
 ```
 
 When the application starts you can open a browser to:
