@@ -61,7 +61,9 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    @Transactional
     public void removeSpot(Long spotId) {
+        historyRepo.deleteBySpotId(spotId);
         spotRepo.deleteById(spotId);
     }
 

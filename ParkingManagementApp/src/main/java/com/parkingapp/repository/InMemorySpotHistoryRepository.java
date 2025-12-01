@@ -31,4 +31,9 @@ public class InMemorySpotHistoryRepository implements SpotHistoryRepository {
         }
         historyList.add(history);
     }
+
+    @Override
+    public void deleteBySpotId(Long spotId) {
+        historyList.removeIf(h -> h.getParkingSpotId().equals(spotId));
+    }
 }

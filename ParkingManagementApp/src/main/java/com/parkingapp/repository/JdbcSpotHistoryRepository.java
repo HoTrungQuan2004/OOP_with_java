@@ -45,4 +45,10 @@ public class JdbcSpotHistoryRepository implements SpotHistoryRepository {
                 Timestamp.valueOf(history.getChangeTime())
         );
     }
+
+    @Override
+    public void deleteBySpotId(Long spotId) {
+        String sql = "DELETE FROM spot_history WHERE parking_spot_id = ?";
+        jdbc.update(sql, spotId);
+    }
 }

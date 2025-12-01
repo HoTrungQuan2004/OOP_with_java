@@ -6,4 +6,5 @@ import java.util.List;
 public interface SpotHistoryRepository {
     List<SpotHistory> findBySpotId(Long spotId);
     void save(SpotHistory history);
+    void deleteBySpotId(Long spotId);
 }
